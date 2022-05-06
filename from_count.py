@@ -7,12 +7,12 @@ L.Leemis & S.Park
 
 Algorithm 9.3.1
 """
-import random
 
 import numpy as np
+from scipy import stats
 from sparklines import sparklines
 
-# random.seed(42)
+np.random.seed(42)
 
 data = np.array([
     [1, 2, 4, 4, 6, 4, 3, 1, 1],  # seed=1
@@ -25,8 +25,10 @@ n = data.sum(axis=0)
 m = 9
 k = 3
 
+dist = stats.expon()
+
 lmb_max = sum(n / k)
-E = random.expovariate(1.0)
+E = dist.rvs()
 T = []
 i = 1
 j = 0
@@ -39,7 +41,7 @@ while E <= lmb_max:
         lmb += n[i - 1] / k
 
     T.append(a[i] - (lmb - E) * k * (a[i] - a[i - 1]) / n[i - 1])
-    E += random.expovariate(1.0)
+    E += dist.rvs()
 T.pop()
 
 events = [len([x for x in T if l < x <= r]) for l, r in zip(a, a[1:])]
